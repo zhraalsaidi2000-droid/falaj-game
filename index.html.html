@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سرّ الأفلاج العُمانية: رحلة الجد والحفيد</title>
+    <style>
+        :root {
+            --primary: #1b4332;
+            --secondary: #2d6a4f;
+            --accent: #d4a373;
+            --light: #fefae0;
+            --sand: #faedcd;
+            --water: #0077b6;
+            --water-light: #90e0ef;
+            --text: #2b2b2b;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            background-image: linear-gradient(135deg, #fefae0 0%, #faedcd 100%);
+        }
+
+        header {
+            width: 100%;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px var(--shadow);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-title h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .hero-banner {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=900&q=80') center/cover;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .hero-banner h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ffdda1;
+        }
+
+        .dialogue-box {
+            background: var(--sand);
+            border: 2px solid var(--accent);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            text-align: right;
+            width: 100%;
+        }
+
+        .avatar {
+            font-size: 2.5rem;
+            background: white;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px var(--shadow);
+            flex-shrink: 0;
+        }
+
+        .dialogue-text h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .dialogue-text p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(45, 106, 79, 0.3);
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(27, 67, 50, 0.4);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 10px;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #dcdcdc;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .option-btn:hover {
+            border-color: var(--secondary);
+            background: #f4f9f6;
+        }
+
+        .option-btn.correct {
+            background: #d8f3dc !important;
+            border-color: #52b788 !important;
+            color: #081c15;
+        }
+
+        .option-btn.incorrect {
+            background: #ffe5d9 !important;
+            border-color: #e07a5f !important;
+            color: #3d0000;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            width: 100%;
+            text-align: right;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.success {
+            background: #d8f3dc;
+            color: #1b4332;
+            border: 1px solid #b7e4c7;
+        }
+
+        .feedback.error {
+            background: #ffe5d9;
+            color: #9c27b0;
+            border: 1px solid #f4acb7;
+        }
+
+        /* Map game stage 1 */
+        .mini-map {
+            width: 100%;
+            height: 200px;
+            background: #e9edc9;
+            border-radius: 12px;
+            position: relative;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 2px dashed var(--secondary);
+        }
+
+        .map-target {
+            position: absolute;
+            width: 80px;
+            height: 50px;
+            background: #ccd5ae;
+            border: 2px solid #90a955;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Stage 4 Water Distribution */
+        .farms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .farm-card {
+            background: #f1faee;
+            border: 2px solid #a8dadc;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .farm-card h5 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .water-gate {
+            background: var(--water);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .water-gate.open {
+            background: #2a9d8f;
+        }
+        .water-gate.closed {
+            background: #e76f51;
+        }
+
+        /* Stage 5 UNESCO */
+        .unesco-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .unesco-card {
+            background: #fdf0d5;
+            border: 1px solid var(--accent);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .unesco-card.selected {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* Stage 6 Rescue */
+        .canal-repair-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .canal-block {
+            width: 70px;
+            height: 70px;
+            background: #adb5bd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid #6c757d;
+        }
+
+        .canal-block.fixed {
+            background: var(--water-light);
+            border-color: var(--water);
+        }
+
+        /* Controls / Audio */
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .farms-grid, .unesco-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-banner h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-title">
+            <span>🌿</span>
+            <h1>سرّ الأفلاج العُمانية</h1>
+        </div>
+        <div class="game-stats">
+            <div class="stat-badge">⭐ <span id="score-val">0</span> نقطة</div>
+            <div class="stat-badge">💧 <span id="water-val">0</span> قطرات</div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Welcome Screen -->
+        <div id="screen-welcome" class="screen active">
+            <div class="hero-banner">
+                <h2>رحلة الجد والحفيد في ربوع عُمان</h2>
+                <p>اكتشف تاريخ ونظام الأفلاج العريقة بطريقة تفاعلية ممتعة</p>
+            </div>
+
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد سالم</h4>
+                    <p>«يا ولدي، الأفلاج من أعظم إنجازات أجدادنا. اليوم بخليك تكتشف أسرارها، وتتعلم كيف جرى الماي في أرضنا، وكيف حافظ العُمانيون على هذي الثروة عبر الأجيال».</p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="startGame()">ابدأ الرحلة 🚀</button>
+        </div>
+
+        <!-- Stage 1: Discover Falaj -->
+        <div id="screen-stage1" class="screen">
+            <div class="progress-container"><div class="progress-bar" id="p1-bar" style="width: 16%;"></div></div>
+            <h3>المرحلة الأولى: اكتشف سر الفلج</h3>
+            
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد</h4>
+                    <p>«يا بُني، ما هو الفلج؟ اختر الإجابة الصحيحة لنعرف مدى فهمك لنظام الري التقليدي».</p>
+                </div>
+            </div>
+
+            <div class="options-grid" id="q1-options">
+                <button class="option-btn" onclick="checkQ1(1, false)">1. طريق جبلي تمر فيه السيارات.</button>
+                <button class="option-btn" onclick="checkQ1(2, true)">2. قناة تنقل المياه لري المزارع.</button>
+                <button class="option-btn" onclick="checkQ1(3, false)">3. بئر لا يستخدم لنقل المياه.</button>
+            </div>
+
+            <div id="q1-feedback" class="feedback"></div>
+            <button id="q1-next" class="btn" style="display:none;" onclick="goToStage1Map()">التالي: تتبع مجرى الفلج 🌊</button>
+        </div>
+
+        <!-- Stage 1 Map Mini-game -->
+        <div id="screen-stage1-map" class="screen">
+            <div class="progress-container"><div class="progress-bar" style="width: 25%;"></div></div>
+            <h3>توجيه مياه الفلج</h3>
+            <p style="margin-bottom: 15px;">اضغط على مجرى الماء الصحيح بين الجبال والنخيل ليصل الماء إلى المزرعة:</p>
+            
+            <div class="mini-map">
+                <div style="position: absolute; top: 20px; right: 20px; font-weight: bold; color: var(--primary);">🏔️ الجبال (المصدر)</div>
+                <div class="map-target" style="bottom: 20px; left: 20px;" onclick="completeStage1Map()">🌴 المزرعة</div>
+                <div id="mini-water" style="position: absolute; top: 40px; right: 80px; width: 0px; height: 8px; background: var(--water); transition: width 0.8s;"></div>
+            </div>
+
+            <div id="map-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Stage 2: Falaj Types -->
+        <div id="screen-stage2" class="screen">
+            <div class="progress-container"><div class="progress-bar" style="width: 38%;"></div></div>
+            <h3>المرحلة الثانية: تحدي أنواع الأفلاج</h3>
+            
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد</h4>
+                    <p>«للأفلاج في عُمان ثلاثة أنواع رئيسية: العيني، والغيلي، والداوودي. أي نوع يعتمد على المياه الجارية في الأودية؟»</p>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkStage2('ain', false)">أ) الفلج العيني (مصدره العيون الطبيعية)</button>
+                <button class="option-btn" onclick="checkStage2('ghail', true)">ب) الفلج الغيلي (يعتمد على المياه السطحية الجارية في الأودية)</button>
+                <button class="option-btn" onclick="checkStage2('dawudi', false)">ج) الفلج الداوودي (قنوات تحت الأرض)</button>
+            </div>
+
+            <div id="stage2-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Stage 3: Time Journey -->
+        <div id="screen-stage3" class="screen">
+            <div class="progress-container"><div class="progress-bar" style="width: 54%;"></div></div>
+            <h3>المرحلة الثالثة: رحلة عبر الزمن</h3>
+            
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد</h4>
+                    <p>«الأدلة الأثرية تؤكد أن قنوات الأفلاج في عُمان تعود إلى الألف الثالث قبل الميلاد! لماذا اهتم أجدادنا ببنائها؟»</p>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <button class="option-btn" onclick="checkStage3(true)">لتوفير المياه للزراعة واستدامة الحياة في القرية.</button>
+                <button class="option-btn" onclick="checkStage3(false)">لبناء طرق سريعة للسيارات الحديثة.</button>
+                <button class="option-btn" onclick="checkStage3(false)">لتخزين الذهب والمجوهرات القديمة.</button>
+            </div>
+
+            <div id="stage3-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Stage 4: Water Distribution -->
+        <div id="screen-stage4" class="screen">
+            <div class="progress-container"><div class="progress-bar" style="width: 70%;"></div></div>
+            <h3>المرحلة الرابعة: المسؤول عن توزيع المياه (العريف)</h3>
+            
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد</h4>
+                    <p>«العريف يتولى تنظيم مواعيد وحصص السقي بدقة. افتح بوابات الماء المناسبة لجميع المزارع الثلاث بالتساوي لتنجح في المهمة!»</p>
+                </div>
+            </div>
+
+            <div class="farms-grid">
+                <div class="farm-card">
+                    <h5>مزرعة النخيل (أ)</h5>
+                    <button class="water-gate" id="gate-0" onclick="toggleGate(0)">مغلق</button>
+                </div>
+                <div class="farm-card">
+                    <h5>مزرعة النخيل (ب)</h5>
+                    <button class="water-gate" id="gate-1" onclick="toggleGate(1)">مغلق</button>
+                </div>
+                <div class="farm-card">
+                    <h5>مزرعة النخيل (ج)</h5>
+                    <button class="water-gate" id="gate-2" onclick="toggleGate(2)">مغلق</button>
+                </div>
+            </div>
+
+            <button class="btn" onclick="verifyDistribution()">تأكيد توزيع المياه 💧</button>
+            <div id="stage4-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Stage 5: UNESCO World Heritage -->
+        <div id="screen-stage5" class="screen">
+            <div class="progress-container"><div class="progress-bar" style="width: 85%;"></div></div>
+            <h3>المرحلة الخامسة: كنز التراث العالمي</h3>
+            
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد</h4>
+                    <p>«اختر الأفلاج الخمسة المدرجة في قائمة التراث العالمي لليونسكو (عام 2006):»</p>
+                </div>
+            </div>
+
+            <div class="unesco-grid" id="unesco-options">
+                <div class="unesco-card" onclick="toggleUnesco(this, 'دارس')">فلج دارس</div>
+                <div class="unesco-card" onclick="toggleUnesco(this, 'الخطمين')">فلج الخطمين</div>
+                <div class="unesco-card" onclick="toggleUnesco(this, 'الملكي')">فلج الملكي</div>
+                <div class="unesco-card" onclick="toggleUnesco(this, 'الميسر')">فلج الميسر</div>
+                <div class="unesco-card" onclick="toggleUnesco(this, 'الجيلة')">فلج الجيلة</div>
+                <div class="unesco-card" onclick="toggleUnesco(this, 'fake')">فلج مسقط العادي</div>
+            </div>
+
+            <button class="btn" onclick="verifyUnesco()">تحقق من الاختيارات ✨</button>
+            <div id="stage5-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Stage 6: Rescue Falaj -->
+        <div id="screen-stage6" class="screen">
+            <div class="progress-container"><div class="progress-bar" style="width: 95%;"></div></div>
+            <h3>المرحلة السادسة: أنقذ الفلج المسدود</h3>
+            
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد</h4>
+                    <p>«بعض أجزاء القناة مسدودة بالأحجار والشوائب! اضغط على القطع المسدودة لإصلاحها وإعادة جريان المياه للنخيل.»</p>
+                </div>
+            </div>
+
+            <div class="canal-repair-box">
+                <div class="canal-block" id="cb-0" onclick="repairCanal(0)">🪨</div>
+                <div class="canal-block" id="cb-1" onclick="repairCanal(1)">🪨</div>
+                <div class="canal-block" id="cb-2" onclick="repairCanal(2)">🪨</div>
+            </div>
+
+            <div id="stage6-feedback" class="feedback"></div>
+        </div>
+
+        <!-- Victory Screen -->
+        <div id="screen-victory" class="screen">
+            <div class="hero-banner" style="background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=900&q=80') center/cover;">
+                <h2>مبروك يا بطل العروبة!</h2>
+                <p>أفلاج عُمان.. إرث الأجداد وأمانة الأحفاد</p>
+            </div>
+
+            <div class="dialogue-box">
+                <div class="avatar">👴</div>
+                <div class="dialogue-text">
+                    <h4>الجد سالم والحفيد</h4>
+                    <p><strong>الجد:</strong> «أحسنت يا ولدي! الحين عرفت أن الفلج ما هو مجرد ماي؛ هو علم أجدادنا، وتعاونهم، وتراثنا اللي لازم نحافظ عليه».</p>
+                    <p style="margin-top: 8px;"><strong>الحفيد:</strong> «أوعدك يا جدي، بحافظ على أفلاج عُمان، وبعلّم أصحابي عنها».</p>
+                </div>
+            </div>
+
+            <div style="font-size: 1.2rem; font-weight: bold; color: var(--secondary); margin: 15px 0;">
+                🏆 إجمالي النقاط: <span id="final-score">0</span> | 💧 قطرات الماء: <span id="final-water">0</span>
+            </div>
+
+            <div style="background: #e8f5e9; border: 2px solid #52b788; padding: 15px; border-radius: 10px; margin: 10px 0; width: 100%;">
+                🎖️ حصلت على شارة: <strong>«حارس التراث العُماني»</strong> بجدارة!
+            </div>
+
+            <button class="btn" onclick="resetGame()">إعادة اللعبة 🔄</button>
+        </div>
+
+    </div>
+
+    <button class="audio-toggle audio-control" onclick="toggleAudio()" title="تشغيل/إيقاف الصوت">🔊</button>
+
+    <script>
+        let gameState = {
+            score: 0,
+            water: 0
+        };
+
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        function playBeep(frequency, duration, type='sine') {
+            if (!audioEnabled) return;
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            document.querySelector('.audio-toggle').textContent = audioEnabled ? '🔊' : '🔇';
+        }
+
+        function updateStats() {
+            document.getElementById('score-val').textContent = gameState.score;
+            document.getElementById('water-val').textContent = gameState.water;
+            localStorage.setItem('falaj_game_score', gameState.score);
+            localStorage.setItem('falaj_game_water', gameState.water);
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function startGame() {
+            playBeep(440, 0.2);
+            showScreen('screen-stage1');
+        }
+
+        // Stage 1 logic
+        function checkQ1(choice, isCorrect) {
+            const feedback = document.getElementById('q1-feedback');
+            feedback.classList.remove('success', 'error');
+            if (isCorrect) {
+                playBeep(587.33, 0.3);
+                feedback.innerHTML = "<strong>صحيح تماماً!</strong> الفلج هو قناة مائية هندسية فريدة تنقل المياه لري المزارع والبساتين في القرى العُمانية.";
+                feedback.classList.add('success');
+                gameState.score += 20;
+                gameState.water += 2;
+                updateStats();
+                document.getElementById('q1-next').style.display = 'inline-flex';
+            } else {
+                playBeep(220, 0.4);
+                feedback.innerHTML = "<strong>خطأ.</strong> الفلج ليس طريقاً للسيارات ولا بئراً عادياً، بل هو نظام ري هندسي فريد. حاول مرة أخرى!";
+                feedback.classList.add('error');
+            }
+            feedback.classList.add('show');
+        }
+
+        function goToStage1Map() {
+            playBeep(523.25, 0.2);
+            showScreen('screen-stage1-map');
+        }
+
+        function completeStage1Map() {
+            playBeep(659.25, 0.3);
+            document.getElementById('mini-water').style.width = '85%';
+            const fb = document.getElementById('map-feedback');
+            fb.innerHTML = "<strong>أحسنت!</strong> انساب الماء بنجاح من الجبال إلى المزرعة عبر القناة.";
+            fb.className = "feedback success show";
+            gameState.score += 15;
+            gameState.water += 2;
+            updateStats();
+            setTimeout(() => {
+                showScreen('screen-stage2');
+            }, 2000);
+        }
+
+        // Stage 2 logic
+        function checkStage2(type, isCorrect) {
+            const fb = document.getElementById('stage2-feedback');
+            if (isCorrect) {
+                playBeep(659.25, 0.3);
+                fb.innerHTML = "<strong>إجابة دقيقة!</strong> الفلج الغيلي يعتمد على تجميع المياه السطحية الجارية في مجاري الأودية.";
+                fb.className = "feedback success show";
+                gameState.score += 25;
+                gameState.water += 3;
+                updateStats();
+                setTimeout(() => showScreen('screen-stage3'), 2000);
+            } else {
+                playBeep(220, 0.4);
+                fb.innerHTML = "<strong>ليس هذا هو المطلوب.</strong> تذكر أن الفلج الغيلي يعتمد على المياه السطحية للأودية.";
+                fb.className = "feedback error show";
+            }
+        }
+
+        // Stage 3 logic
+        function checkStage3(isCorrect) {
+            const fb = document.getElementById('stage3-feedback');
+            if (isCorrect) {
+                playBeep(783.99, 0.3);
+                fb.innerHTML = "<strong>رائع!</strong> اهتم الأجداد ببناء الأفلاج لتوفير المياه للزراعة والحياة واستدامة المجتمعات منذ الألف الثالث ق.م.";
+                fb.className = "feedback success show";
+                gameState.score += 25;
+                gameState.water += 3;
+                updateStats();
+                setTimeout(() => showScreen('screen-stage4'), 2000);
+            } else {
+                playBeep(220, 0.4);
+                fb.innerHTML = "<strong>تفكير غير دقيق.</strong> الأجداد اهتموا بالزراعة والحياة، وليست السيارات أو الذهب.";
+                fb.className = "feedback error show";
+            }
+        }
+
+        // Stage 4 logic
+        let gates = [false, false, false];
+        function toggleGate(index) {
+            playBeep(500, 0.1);
+            gates[index] = !gates[index];
+            let btn = document.getElementById(`gate-${index}`);
+            if (gates[index]) {
+                btn.textContent = "مفتوح (يسقي)";
+                btn.classList.add('open');
+                btn.classList.remove('closed');
+            } else {
+                btn.textContent = "مغلق";
+                btn.classList.add('closed');
+                btn.classList.remove('open');
+            }
+        }
+
+        function verifyDistribution() {
+            const fb = document.getElementById('stage4-feedback');
+            if (gates[0] && gates[1] && gates[2]) {
+                playBeep(880, 0.4);
+                fb.innerHTML = "<strong>أحسنت يا عريف الفلج!</strong> تم فتح قنوات السقي لجميع المزارع بالتساوي بحكمة وعدل.";
+                fb.className = "feedback success show";
+                gameState.score += 30;
+                gameState.water += 5;
+                updateStats();
+                setTimeout(() => showScreen('screen-stage5'), 2000);
+            } else {
+                playBeep(220, 0.4);
+                fb.innerHTML = "<strong>توزيع غير متوازن!</strong> يجب فتح بوابات المياه للمزارع الثلاث كلها لكي لا تُحرم أي مزرعة من حصتها العادلة.";
+                fb.className = "feedback error show";
+            }
+        }
+
+        // Stage 5 logic
+        let selectedUnesco = [];
+        function toggleUnesco(el, name) {
+            playBeep(450, 0.1);
+            if(name === 'fake') {
+                el.style.opacity = '0.4';
+                return;
+            }
+            if(selectedUnesco.includes(name)) {
+                selectedUnesco = selectedUnesco.filter(item => item !== name);
+                el.classList.remove('selected');
+            } else {
+                selectedUnesco.push(name);
+                el.classList.add('selected');
+            }
+        }
+
+        function verifyUnesco() {
+            const fb = document.getElementById('stage5-feedback');
+            const correctSet = ['دارس', 'الخطمين', 'الملكي', 'الميسر', 'الجيلة'];
+            let match = selectedUnesco.length === 5 && correctSet.every(item => selectedUnesco.includes(item));
+            
+            if (match) {
+                playBeep(987.77, 0.4);
+                fb.innerHTML = "<strong>ممتاز جداً!</strong> لقد حددت الأفلاج الخمسة المدرجة في قائمة التراث العالمي لليونسكو لعام 2006 بدقة.";
+                fb.className = "feedback success show";
+                gameState.score += 35;
+                gameState.water += 5;
+                updateStats();
+                setTimeout(() => showScreen('screen-stage6'), 2000);
+            } else {
+                playBeep(220, 0.4);
+                fb.innerHTML = "<strong>لم تكتمل القائمة الصحيحة!</strong> تأكد من اختيار الأفلاج الخمسة المعتمدة فقط (دارس، الخطمين، الملكي، الميسر، الجيلة).";
+                fb.className = "feedback error show";
+            }
+        }
+
+        // Stage 6 logic
+        let repaired = [false, false, false];
+        function repairCanal(idx) {
+            playBeep(600, 0.15);
+            repaired[idx] = true;
+            let block = document.getElementById(`cb-${idx}`);
+            block.textContent = "💧";
+            block.classList.add('fixed');
+
+            if (repaired.every(val => val)) {
+                playBeep(1046.50, 0.5);
+                const fb = document.getElementById('stage6-feedback');
+                fb.innerHTML = "<strong>أتممت المهمة بنجاح!</strong> تدفقت المياه صافية وانتعشت نخيل القرية بأكملها.";
+                fb.className = "feedback success show";
+                gameState.score += 40;
+                gameState.water += 10;
+                updateStats();
+                setTimeout(() => {
+                    document.getElementById('final-score').textContent = gameState.score;
+                    document.getElementById('final-water').textContent = gameState.water;
+                    showScreen('screen-victory');
+                }, 2500);
+            }
+        }
+
+        function resetGame() {
+            gameState.score = 0;
+            gameState.water = 0;
+            updateStats();
+            gates = [false, false, false];
+            repaired = [false, false, false];
+            selectedUnesco = [];
+            document.querySelectorAll('.unesco-card').forEach(c => { c.classList.remove('selected'); c.style.opacity = '1'; });
+            showScreen('screen-welcome');
+        }
+    </script>
+</body>
+</html>
